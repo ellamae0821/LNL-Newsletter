@@ -1,7 +1,7 @@
 <?php  
-	// ini_set( 'display_errors', 1 );
-	// ini_set( 'display_startup_errors', 1 );
-	// error_reporting( E_ALL );
+	ini_set( 'display_errors', 1 );
+	ini_set( 'display_startup_errors', 1 );
+	error_reporting( E_ALL );
 
 	if($_SERVER['REMOTE_ADDR'] != "66.162.249.170"){
 		header("Location: http://longs.staradvertiser.com/");
@@ -25,14 +25,34 @@
 		?><pre><?php print_r($object); ?></pre><?php
 	}
 
+	function subscribe_to_list($list_ID, $subscriber_array, $url){
+		$params = array();
+		$params['listId'] = $list_ID; 
+		$params['subscribers'] = $subscriber_array;
+		$payload = json_encode($params);
+		// print_pre(json_encode($params));
+		
+		$ch = curl_init($url);
+		curl_setopt( $ch, CURLOPT_URL, $url);
+		curl_setopt( $ch, CURLOPT_POST, true);
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload);
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_HEADER, 0);
+		$result = curl_exec($ch);
+		$result_details = curl_getinfo( $ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		return $result_details;
+		// print_pre($result);
+		// print_pre($result_details);
+	}
+
  	$mailing_lists_location = array(
 									134004 => "oahu",
 									134006 => "maui",
 									135971 => "kauai",
 									135968 => "kona",
-									135972 => "hilo"
+									136450 => "hilo"
 							  );
-
 
 	$emailErr = "";
 	$email = "";
@@ -60,13 +80,27 @@
 //	GET Location name
 		$location_name = $mailing_lists_location[$chosen_location];
 
+
 //	Update the user field on ITERABLE
 		$add_longs = array('location' => $location_name);
 		$update_result = $email_service->user_update_by_email($email,  array("longs" => $add_longs));
 		$result_code = $update_result['response_code'];
 		// echo "update_result : $result_code<br>";
 
-		if ( $result_code == 200) {
+
+//	Subscribe the user the ITERABLE List
+		$subscriber[] = array(
+						'email' => $email, 
+						'dataFields' => new ArrayObject(),
+						'userId' => ""
+						);
+
+		$subscribe_result =	subscribe_to_list( (int)$chosen_location, $subscriber, $subscribe_url);
+		// print_pre($subscribe_result);
+		// echo "subscribe_result : $subscribe_result";
+
+
+		if ( $subscribe_result && $result_code == 200) {
 			header("Location: http://longs.staradvertiser.com/thank-you.php?loc=".$location_name);
 		}else{
 			$redErr = "Unable to process your request, please try again.";
@@ -95,6 +129,7 @@
   	<form action="#" method="post" name="sign up for beta form">
       	<div class="header">
          	<p>Sign Up For Our Newsletter</p>
+         	<span style="color: red; height: 30px"> <?php echo $redErr;?></span> <br>
       	</div>
       	<div class="description">
         	<p>Select your location and enter your email to start receiving your Longs ad every Sunday!</p>
@@ -103,10 +138,10 @@
 
       	<div style="text-align: left; font-size: 21px; padding-left: 40%"> 
 			<?php
-				foreach ($mailing_lists_location as $key => $value) {
+				foreach ($mailing_lists_location as $subscription_list_id => $subscription_list_name) {
 					?>
-						<input type="radio" name="listID" value="<?php echo $key ?>" /> 
-						<?php echo ucfirst($value); ?><br> 
+						<input type="radio" name="listID" value="<?php echo $subscription_list_id ?>" /> 
+						<?php echo ucfirst($subscription_list_name); ?><br> 
 					<?php
 				}	
 			?><br><br>
