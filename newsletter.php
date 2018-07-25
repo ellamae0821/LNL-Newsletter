@@ -1,7 +1,7 @@
 <?php  
-	ini_set( 'display_errors', 1 );
-	ini_set( 'display_startup_errors', 1 );
-	error_reporting( E_ALL );
+	// ini_set( 'display_errors', 1 );
+	// ini_set( 'display_startup_errors', 1 );
+	// error_reporting( E_ALL );
 
 	if($_SERVER['REMOTE_ADDR'] != "66.162.249.170"){
 		header("Location: http://longs.staradvertiser.com/");
@@ -12,7 +12,7 @@
  	$email_service = new Email_Service( "-", false, true ); // SANDBOX
 
 	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=-";
-
+	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=-";
 
 	function test_input($data) {
 		$data = trim($data);
@@ -51,16 +51,18 @@
 									134006 => "maui",
 									135971 => "kauai",
 									135968 => "kona",
-									136450 => "hilo"
+									135972 => "hilo"
 							  );
 
 	$emailErr = "";
 	$email = "";
 	$locErr = "";
-	$chosen_location = "";
+	$location_id = "";
+	$redErr = "";
+
+
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
 		if ( empty($_POST["email"]) ) {
 			$emailErr = "Email is required";
 		} else {
@@ -74,31 +76,46 @@
 		if ( empty($_POST["listID"]) ) {
 			$locErr = "Please choose one location";
 		} else {
-			$chosen_location = $_POST['listID'];
+			$location_id = $_POST['listID'];
 		}
 
 //	GET Location name
-		$location_name = $mailing_lists_location[$chosen_location];
+		$location_name = $mailing_lists_location[$location_id];
 
+
+		$user = $email_service->user_get_by_email( $email );
+		$user_subscriptions = array();
+
+		$subscriber[] = array(
+				'email' => $email, 
+				'dataFields' => new ArrayObject(),
+				'userId' => ""
+				);
+		$subscriber_unsub = array(
+				'email' => $email, 
+				);
+
+//	UNSUBSCRIBE from the current location
+		if( !empty($user['content']['user']['dataFields']['longs']['location']) )
+		{
+			$existing_subscription = $user['content']['user']['dataFields']['longs']['location'];
+			$list_to_unsub = array_search($existing_subscription, $mailing_lists_location);
+			// var_dump($list_to_unsub);
+			$unsubscribe_result = $email_service->list_unsubscribe($list_to_unsub, $subscriber_unsub, false);
+			// var_dump($subscriber_unsub);
+			// print_pre($unsubscribe_result);
+
+		}
 
 //	Update the user field on ITERABLE
 		$add_longs = array('location' => $location_name);
 		$update_result = $email_service->user_update_by_email($email,  array("longs" => $add_longs));
 		$result_code = $update_result['response_code'];
-		// echo "update_result : $result_code<br>";
-
 
 //	Subscribe the user the ITERABLE List
-		$subscriber[] = array(
-						'email' => $email, 
-						'dataFields' => new ArrayObject(),
-						'userId' => ""
-						);
+		$subscribe_result =	subscribe_to_list( (int)$location_id, $subscriber, $subscribe_url);
 
-		$subscribe_result =	subscribe_to_list( (int)$chosen_location, $subscriber, $subscribe_url);
-		// print_pre($subscribe_result);
-		// echo "subscribe_result : $subscribe_result";
-
+		// print_pre($subscribe_result); 
 
 		if ( $subscribe_result && $result_code == 200) {
 			header("Location: http://longs.staradvertiser.com/thank-you.php?loc=".$location_name);
@@ -129,12 +146,12 @@
   	<form action="#" method="post" name="sign up for beta form">
       	<div class="header">
          	<p>Sign Up For Our Newsletter</p>
-         	<span style="color: red; height: 30px"> <?php echo $redErr;?></span> <br>
       	</div>
       	<div class="description">
+      		<span style="color: red; height: 20px"> <?php echo $redErr;?></span> <br>
         	<p>Select your location and enter your email to start receiving your Longs ad every Sunday!</p>
       	</div>
-      	<span style="color: red; height: 30px"> <?php echo $locErr;?></span> <br>
+      	<span style="color: red; height: 20px"> <?php echo $locErr;?></span> <br>
 
       	<div style="text-align: left; font-size: 21px; padding-left: 40%"> 
 			<?php
