@@ -4,16 +4,16 @@
 	// ini_set( "display_startup_errors", 1 );
 	// error_reporting( E_ALL );
 
-	if($_SERVER['REMOTE_ADDR'] != "-"){
+	if($_SERVER['REMOTE_ADDR'] != "66.162.249.170"){
 		header("Location: http://longs.staradvertiser.com/");
 	}
 
 	require_once("resources/Email_Service.php");
-	// $email_service = new Email_Service( "-", false, true ); // LIVE
- 	$email_service = new Email_Service( "-", false, true ); // SANDBOX
+	// $email_service = new Email_Service( "8d8acc947a624660a8b41153b6593d29", false, true ); // LIVE
+ 	$email_service = new Email_Service( "8973c0961bcc48daa470281282ebc545", false, true ); // SANDBOX
 
-	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=-";
-	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=-";
+	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=8973c0961bcc48daa470281282ebc545";
+	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=8973c0961bcc48daa470281282ebc545";
 
 	function test_input($data) {
 		$data = trim($data);
@@ -257,7 +257,7 @@
 	<script src="custombox/dist/custombox.min.js"></script>
 	<script src="custombox/dist/custombox.legacy.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>	
-
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <!-- Google Analytics  -->
 <script type="text/javascript">
 
@@ -448,27 +448,47 @@ var sc_project=6148570;
 var sc_invisible=1; 
 var sc_security="0da2004d"; 
 
-new Custombox.modal({
-  content: {
-    effect: 'slide',
-    target: '#modal',
-    container: '#content',
-    animateFrom: 'bottom',
-    animateTo: 'bottom',
-    positionX: 'right',
-    positionY: 'bottom',
-    speedIn: 300,
-    speedOut: 300,
-    delay: 2000,
+$(window).on('load', function(){
+	var myCookie = Cookies.get('modalShowed');
+	if(myCookie){
+		// alert('Modal is hidden ' + myCookie)
+		console.log('must hide')
+	}
+	
+	// var timeExp = new Date(new Date().getTime() + 1 * 60 * 1000);
 
-  },
-  loader: {
-  	active: true,
-  },
-  overlay:{
-  	active: false,
-  }
-}).open();
+	if(myCookie === undefined){
+		Cookies.set('modalShowed', 'true' , {
+			expires: 1
+		});
+		console.log('setting cookie , modal is shown' );
+		new Custombox.modal({
+			content: {
+			effect: 'slide',
+			target: '#modal',
+			container: '#content',
+			animateFrom: 'bottom',
+			animateTo: 'bottom',
+			positionX: 'right',
+			positionY: 'bottom',
+			speedIn: 300,
+			speedOut: 300,
+			delay: 2000,
+
+			},
+			loader: {
+				active: true,
+			},
+			overlay:{
+				active: false,
+			}
+		}).open();
+	}
+});
+		
+
+
+
 
 
 
@@ -477,7 +497,9 @@ new Custombox.modal({
 
 
 <script type="text/javascript">
-	document.getElementById('btn-subscribe').addEventListener('click', function() {
+
+
+	document.getElementById('btn-subscribe').addEventListener('click', function(e) {
 		var buttonModal = new Custombox.modal({
 			content: {
 			effect: 'slide',
@@ -498,6 +520,7 @@ new Custombox.modal({
 			}
 			});
 		buttonModal.open();
+		e.preventDefault();
 	});
 </script>
 
