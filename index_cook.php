@@ -4,16 +4,16 @@
 	// ini_set( "display_startup_errors", 1 );
 	// error_reporting( E_ALL );
 
-	if($_SERVER['REMOTE_ADDR'] != "66.162.249.170"){
+	if($_SERVER['REMOTE_ADDR'] != ""){
 		header("Location: http://longs.staradvertiser.com/");
 	}
 
 	require_once("resources/Email_Service.php");
-	// $email_service = new Email_Service( "8d8acc947a624660a8b41153b6593d29", false, true ); // LIVE
- 	$email_service = new Email_Service( "8973c0961bcc48daa470281282ebc545", false, true ); // SANDBOX
+	// $email_service = new Email_Service( "-", false, true ); // LIVE
+ 	$email_service = new Email_Service( "-", false, true ); // SANDBOX
 
-	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=8973c0961bcc48daa470281282ebc545";
-	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=8973c0961bcc48daa470281282ebc545";
+	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=-";
+	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=-";
 
 	function test_input($data) {
 		$data = trim($data);
