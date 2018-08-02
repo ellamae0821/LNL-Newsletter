@@ -1,28 +1,111 @@
 <?php  
-	// ini_set( 'display_errors', 1 );
-	// ini_set( 'display_startup_errors', 1 );
-	// error_reporting( E_ALL );
-	// date_default_timezone_set('Pacific/Honolulu');
+	ini_set( 'display_errors', 1 );
+	ini_set( 'display_startup_errors', 1 );
+	error_reporting( E_ALL );
+	date_default_timezone_set('Pacific/Honolulu');
 
+	require_once("resources/Email_Service.php");
+ 	$email_service = new Email_Service( "-", false, true ); 
+ 	$mailing_lists_location = array(
+									134004 => "oahu",
+									134006 => "maui",
+									135971 => "kauai",
+									135968 => "kona",
+									135972 => "hilo"
+							  );
 
+	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=-";
+	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=-";
 
-
-
-
-if ($_SERVER['REMOTE_ADDR']=="-") {
+	function test_input($data) {
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		return $data;
+	}
 
 	function print_pre($object) {
 		?><pre><?php print_r($object); ?></pre><?php
 	}
 
-	$today = date("Y-m-d");
-	print_pre($today);
-	// $sunday = strtotime( "previous sunday", strtotime($today));
-	$sunday = date( 'md', strtotime( 'sunday last week' ) );
-	print_pre($sunday);
+	function subscribe_to_list($list_ID, $subscriber_array, $url){
+		$params = array();
+		$params['listId'] = $list_ID; 
+		$params['subscribers'] = $subscriber_array;
+		$payload = json_encode($params);
+		// print_pre(json_encode($params));
+		
+		$ch = curl_init($url);
+		curl_setopt( $ch, CURLOPT_URL, $url);
+		curl_setopt( $ch, CURLOPT_POST, true);
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload);
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_HEADER, 0);
+		$result = curl_exec($ch);
+		$result_details = curl_getinfo( $ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		return $result_details;
+		// print_pre($result);
+		// print_pre($result_details);
+	}
 
+
+
+if ($_SERVER['REMOTE_ADDR']=="-") {
+
+
+	$email = $_GET["email"];
+	$location_id = $_GET['locId'];
+
+
+//	GET Location name
+	$location_name = $mailing_lists_location[$location_id];
+
+
+	$user = $email_service->user_get_by_email( $email );
+	$user_subscriptions = array();
+
+	$subscriber[] = array(
+			'email' => $email, 
+			'dataFields' => new ArrayObject(),
+			'userId' => ""
+			);
+	$subscriber_unsub = array(
+			'email' => $email, 
+			);
+//	UNSUBSCRIBE from the current location
+	if( !empty($user['content']['user']['dataFields']['longs']['location']) )
+	{
+		$existing_subscription = $user['content']['user']['dataFields']['longs']['location'];
+		$list_to_unsub = array_search($existing_subscription, $mailing_lists_location);
+		// var_dump($list_to_unsub);
+		$unsubscribe_result = $email_service->list_unsubscribe($list_to_unsub, $subscriber_unsub, false);
+		// var_dump($subscriber_unsub);
+		// print_pre($unsubscribe_result);
+	}
+
+//	Update the user field on ITERABLE
+	$add_longs = array('location' => $location_name);
+	$update_result = $email_service->user_update_by_email($email,  array("longs" => $add_longs));
+	$result_code = $update_result['response_code'];
+
+//	Subscribe the user the ITERABLE List
+	$subscribe_result =	subscribe_to_list( (int)$location_id, $subscriber, $subscribe_url);
+
+
+}
+
+
+/*	$sunday = date( 'md', strtotime( 'sunday last week' ) );
+	// print_pre($sunday);
 	$location = strtolower($_GET["loc"]);
-	
+	if ( empty($location) ){
+//	location defaults to oahu (in case, where user / designers directly visits http://longs.staradvertiser.com/thank-you.php)
+		$location = "oahu";
+	}
+	// header('refresh:5; url=http://longs.staradvertiser.com/');*/
+
+
 ?>
 
 
@@ -37,6 +120,7 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 	<title>&quot;Make Longs a Part of Your Day&quot; | Longs Hawaii</title>
 
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="ella_copy.css" type="text/css" media="screen" charset="utf-8">
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>	
@@ -62,10 +146,18 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 
 <body>
 
-<div class="container" id="wrapper">
-	Thank You for signing up! <br>
-	Click <a href='-'> HERE </a>to start saving! <br><br>
-	<a href='http://longs.staradvertiser.com/<?php echo $location?>/<?php echo $sunday ?>/html5forpc.html?page=0'><img src='-' style ="width: 50%"></a>
+<div class="container" id="wrapper" style="height:100%;">
+	<?php
+		if ( $subscribe_result && $result_code == 200) { ?>
+			<h1>Thank You for signing up! YEAY!</h1> <br>
+			<p>Please wait while we redirect you ...</p>
+	<?php }else {
+		echo "nope buddy! but you!";
+		include 'newsletter.php';
+	} ?>
+<!-- <div> -->
+
+	<!-- <a href='http://longs.staradvertiser.com/<?php echo $location?>/<?php echo $sunday ?>/'><img src='http://longs.staradvertiser.com/<?php echo $location?>/<?php echo $sunday ?>/content/medium/page1.jpg' style ="width: 50%"></a> -->
 
 </div>
 
@@ -99,4 +191,3 @@ alt="godaddy web stats" ></a></div></noscript>
 </body>
 </html>
 
-<?php }
