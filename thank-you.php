@@ -1,8 +1,9 @@
+
 <?php  
-	ini_set( 'display_errors', 1 );
-	ini_set( 'display_startup_errors', 1 );
-	error_reporting( E_ALL );
-	date_default_timezone_set('Pacific/Honolulu');
+	// ini_set( 'display_errors', 1 );
+	// ini_set( 'display_startup_errors', 1 );
+	// error_reporting( E_ALL );
+	// date_default_timezone_set('Pacific/Honolulu');
 
 	require_once("resources/Email_Service.php");
  	$email_service = new Email_Service( "-", false, true ); 
@@ -57,6 +58,9 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 	$email = $_GET["email"];
 	$location_id = $_GET['locId'];
 
+	if ( empty($location_id) || empty($email)){
+		header("Location: http://longs.staradvertiser.com/newsletter.php");
+	}
 
 //	GET Location name
 	$location_name = $mailing_lists_location[$location_id];
@@ -96,21 +100,10 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 }
 
 
-/*	$sunday = date( 'md', strtotime( 'sunday last week' ) );
-	// print_pre($sunday);
-	$location = strtolower($_GET["loc"]);
-	if ( empty($location) ){
-//	location defaults to oahu (in case, where user / designers directly visits http://longs.staradvertiser.com/thank-you.php)
-		$location = "oahu";
-	}
-	// header('refresh:5; url=http://longs.staradvertiser.com/');*/
-
 
 ?>
-
-
 <!DOCTYPE html>
-<html>
+<html style="min-height: 100%;">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -120,12 +113,11 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 	<title>&quot;Make Longs a Part of Your Day&quot; | Longs Hawaii</title>
 
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="ella_copy.css" type="text/css" media="screen" charset="utf-8">
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>	
 
-	<!-- Google Analytics  -->
+<!-- Google Analytics  -->
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -141,53 +133,110 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 </script>
 
 <!-- AAM Site Certifier starts plowing -->
+<script type="text/javascript">
+    ;(function(p,l,o,w,i,n,g){if(!p[i]){p.GlobalAamNamespace=p.GlobalAamNamespace||[];
+    p.GlobalAamNamespace.push(i);p[i]=function(){(p[i].q=p[i].q||[]).push(arguments)
+    };p[i].q=p[i].q||[];n=l.createElement(o);g=l.getElementsByTagName(o)[0];n.async=1;
+    n.src=w;g.parentNode.insertBefore(n,g)}}(window,document,"script","//aamcftag.aamsitecertifier.com/aam.js","aamsitecertifier"));
+
+    window.aamsitecertifier('newTracker', 'cf', 'aamcf.aamsitecertifier.com', {
+        idWeb: '206'
+    });
+
+    window.aamsitecertifier('trackPageView');
+
+
+</script>
+<!-- AAM Site Certifier stops plowing -->
+	
+	
+
 
 </head>
 
-<body>
+<body style="min-height:100%;">
 
-<div class="container" id="wrapper" style="height:100%;">
-	<?php
+	<div class="container" id="wrapper">
+
+		<script type="text/javascript">
+			jQuery(function($){
+				$( ".cross" ).hide();
+				$( "#nav-mobile" ).hide();
+				$( ".hamburger" ).click(function() {
+				$( "#nav-mobile" ).slideToggle( "slow", function() {
+				$( ".hamburger" ).hide();
+				$( ".cross" ).show();
+				});
+				});
+
+				$( ".cross" ).click(function() {
+				$( "#nav-mobile" ).slideToggle( "slow", function() {
+				$( ".cross" ).hide();
+				$( ".hamburger" ).show();
+				});
+				});
+			})
+		</script>
+		
+		<div>
+			<a href="http://longs.staradvertiser.com"><img alt="hawaiijobs" src="images/longsheader.png"/></a>
+		</div>
+				
+	
+
+		<div>
+			<?php
 		if ( $subscribe_result && $result_code == 200) { ?>
-			<h1>Thank You for signing up! YEAY!</h1> <br>
-			<p>Please wait while we redirect you ...</p>
-	<?php }else {
-		echo "nope buddy! but you!";
+			<h1>THANK YOU FOR SIGNING UP! </h1> <br>
+			Redirect page in <span id="countdown">4</span>
+		<?php } else {
 		include 'newsletter.php';
-	} ?>
-<!-- <div> -->
-
-	<!-- <a href='http://longs.staradvertiser.com/<?php echo $location?>/<?php echo $sunday ?>/'><img src='http://longs.staradvertiser.com/<?php echo $location?>/<?php echo $sunday ?>/content/medium/page1.jpg' style ="width: 50%"></a> -->
-
-</div>
-
-
+		} ?>
+		</div>   
+	    
+	</div>
 
 	<footer>
 		<!-- Start of StatCounter Code -->
-<script type="text/javascript">
-var sc_project=6148570; 
-var sc_invisible=1; 
-var sc_security="0da2004d"; 
-</script>
+		<script type="text/javascript">
+		var sc_project=6148570; 
+		var sc_invisible=1; 
+		var sc_security="0da2004d"; 
+		</script>
 
-<script type="text/javascript"
-src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
-class="statcounter"><a title="godaddy web stats"
-href="http://www.statcounter.com/godaddy_website_tonight/"
-target="_blank"><img class="statcounter"
-src="http://c.statcounter.com/6148570/0/0da2004d/1/"
-alt="godaddy web stats" ></a></div></noscript>
-<!-- End of StatCounter Code -->
+		<script type="text/javascript"
+		src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
+		class="statcounter"><a title="godaddy web stats"
+		href="http://www.statcounter.com/godaddy_website_tonight/"
+		target="_blank"><img class="statcounter"
+		src="http://c.statcounter.com/6148570/0/0da2004d/1/"
+		alt="godaddy web stats" ></a></div></noscript>
+		<!-- End of StatCounter Code -->
+		
 		
 		<a href="http://longs.staradvertiser.com" target="_blank"><img alt="longs now CVS" src="images/longs_now_cvs.jpg"/></a><br>
 		<p>Problems viewing this page? Email us at <a style="color: white;" href="mailto:webmasters@staradvertiser.com">webmasters@staradvertiser.com</a></p>	
 
 	</footer>
-	
-	
-	</div>	
-	
+<script type="text/javascript">
+
+	    var seconds = 4;
+	    
+	    function countdown() {
+	        seconds = seconds - 1;
+	        if (seconds < 0) {
+	            // Chnage your redirection link here
+	            window.location = "http://longs.staradvertiser.com/";
+	        } else {
+	            // Update remaining seconds
+	            document.getElementById("countdown").innerHTML = seconds;
+	            // Count down using javascript
+	            window.setTimeout("countdown()", 1000);
+	        }
+	    }
+
+	    countdown();
+
+</script>
 </body>
 </html>
-

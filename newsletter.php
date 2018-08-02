@@ -8,7 +8,7 @@
 	}
 
 	require_once("resources/Email_Service.php");
-	// $email_service = new Email_Service( "-", false, true ); // LIVE
+	// $email_service = new Email_Service( "8d8acc947a624660a8b41153b6593d29", false, true ); // LIVE
  	$email_service = new Email_Service( "-", false, true ); // SANDBOX
 
 	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=-";
@@ -118,7 +118,7 @@
 		// print_pre($subscribe_result); 
 
 		if ( $subscribe_result && $result_code == 200) {
-			header("Location: http://longs.staradvertiser.com/thank-you.php?loc=".$location_name);
+			header("Location: http://longs.staradvertiser.com/thank-you.php");
 		}else{
 			$redErr = "Unable to process your request, please try again.";
 		}
@@ -143,16 +143,14 @@
 <body>
 
 <div class="container" id="wrapper">
-  	<form action="#" method="post" name="sign up for beta form">
-      	<div class="header">
+  	<form action="" method="post" name="sign up for beta form" id="signup">
+      	<div class="nl_header">
          	<p>Sign Up For Our Newsletter</p>
       	</div>
-      	<div class="description">
-      		<span style="color: red; height: 20px"> <?php echo $redErr;?></span> <br>
-        	<p>Select your location and enter your email to start receiving your Longs ad every Sunday!</p>
+      	<div class="nl_description">
+        	<p style="font-family: 'Lato', sans-serif; font-size: 18px; line-height: 25px; margin: 0 10px;">Select your location and enter your email to start receiving your Longs ad every Sunday!</p>
       	</div>
       	<span style="color: red; height: 20px"> <?php echo $locErr;?></span> <br>
-
       	<div style="text-align: left; font-size: 21px; padding-left: 40%"> 
 			<?php
 				foreach ($mailing_lists_location as $subscription_list_id => $subscription_list_name) {
@@ -163,12 +161,12 @@
 				}	
 			?><br><br>
 		</div>
-
+		<span style="color: red; height: 20px"> <?php echo $emailErr;?></span> <br>
       <div class="input">
-      	<span style="color: red"> <?php echo $emailErr;?></span> <br>
         <input type="text" class="button" id="email" name="email" placeholder="NAME@EXAMPLE.COM">
         <input type="submit" class="button" id="submit" name="submit" value="SIGN UP">
       </div>
+      
       <div>
       	<p style="font-size: 10px">By clicking sign up, you are agreeing to our <a href="http://www.oahupublications.com/privacy_policy/">Privacy policy</a> and <a href="http://www.oahupublications.com/terms-of-service/">Terms of Service.</a></p>
       </div>
