@@ -4,16 +4,16 @@
 	// ini_set( "display_startup_errors", 1 );
 	// error_reporting( E_ALL );
 
-	if($_SERVER['REMOTE_ADDR'] != "-"){
+/*	if($_SERVER['REMOTE_ADDR'] != "66.162.249.170"){
 		header("Location: http://longs.staradvertiser.com/");
 	}
-
+*/
 	require_once("resources/Email_Service.php");
 	// $email_service = new Email_Service( "8d8acc947a624660a8b41153b6593d29", false, true ); // LIVE
- 	$email_service = new Email_Service( "-", false, true ); // SANDBOX
+ 	$email_service = new Email_Service( "8973c0961bcc48daa470281282ebc545", false, true ); // SANDBOX
 
-	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=-";
-	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=-";
+	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=8973c0961bcc48daa470281282ebc545";
+	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=8973c0961bcc48daa470281282ebc545";
 
 	function test_input($data) {
 		$data = trim($data);
@@ -198,7 +198,7 @@
 
 	<link rel="stylesheet" href="style-ricky.css" type="text/css" media="screen" charset="utf-8">
 	<link href="custombox/dist/custombox.min-rr.css" rel="stylesheet">
-	<link href="ricky.css" rel="stylesheet">
+	<link href="ricky_2.css" rel="stylesheet">
 	<script src="custombox/dist/custombox.min.js"></script>
 	<script src="custombox/dist/custombox.legacy.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>	
@@ -239,6 +239,10 @@
     });
 
     window.aamsitecertifier('trackPageView');
+
+    var sc_project=6148570; 
+	var sc_invisible=1; 
+	var sc_security="0da2004d"; 
 </script>
 <!-- AAM Site Certifier stops plowing -->
 	
@@ -355,7 +359,7 @@
 	    	<div class="close" onclick="Custombox.modal.close();">+</div>
     	  	<form action="" method="post" name="sign up for beta form" id="signup">
 		      	<div class="nl_header">
-		         	<p>Sign Up For Our Newsletter</p>
+		         	<p>Subscribe To Our Newsletter</p>
 		      	</div>
 		      	<div class="nl_description">
 		        	<p style="font-family: 'Lato', sans-serif; font-size: 18px; line-height: 25px; margin: 0 10px;">Select your location and enter your email to start receiving your Longs ad every Sunday!</p>
@@ -366,7 +370,7 @@
 					<?php
 						foreach ($mailing_lists_location as $subscription_list_id => $subscription_list_name) {
 							?>
-								<input type="radio" name="listID" value="<?php echo $subscription_list_id ?>" /> 
+								<input type="radio" name="listID" value="<?php echo $subscription_list_id ?>" <?php if (isset($_POST['listID']) && $_POST['listID']=="$subscription_list_id") echo "checked";?> /> 
 								<?php echo ucfirst($subscription_list_name); ?><br> 
 							<?php
 						}	
@@ -383,14 +387,54 @@
 		      </div>
 		    </form>
 	    </div>
-		<div  id="btn-subscribe">+Subscribe to our newletter</div>
-
+		
+<!-- 
 	<footer>
+
+		<script type="text/javascript"
+		src="http://www.statcounter.com/counter/counter.js"></script>
+		<noscript>
+			<div
+				class="statcounter"><a title="godaddy web stats"
+				href="http://www.statcounter.com/godaddy_website_tonight/"
+				target="_blank"><img class="statcounter"
+				src="http://c.statcounter.com/6148570/0/0da2004d/1/"
+				alt="godaddy web stats" ></a>
+			</div>
+		</noscript>
+
+				
+				
+		<div>
+			<a href="http://longs.staradvertiser.com" target="_blank">
+				<img alt="longs now CVS" src="images/longs_now_cvs.jpg"/>
+			</a>
+		</div><br>
+		<div>
+			<p>Problems viewing this page? Email us at 
+				<a style="color: white;" href="mailto:webmasters@staradvertiser.com">webmasters@staradvertiser.com</a>
+			</p>
+		</div>	
+
+	</footer> -->
+
+</div>
+
+	<div class="section group">
+		<div class="col span_1_of_3" id="one">
+		</div>
+		<div class="col span_1_of_3" id="two">
+			Problems viewing this page? </br>Email us at 
+			<a style="color: white;" href="mailto:webmasters@staradvertiser.com">webmasters@staradvertiser.com</a>
+		</div>
+		<div class="col span_1_of_3" id="three">
+			<div id="btn-subscribe"> + SUBSCRIBE TO OUR NEWSLETTER </div>
+		</div>
+	</div>
+</body>
 		<!-- Start of StatCounter Code -->
 <script type="text/javascript">
-	var sc_project=6148570; 
-	var sc_invisible=1; 
-	var sc_security="0da2004d"; 
+
 
 
 	$(window).on('load', function(){
@@ -463,7 +507,7 @@
 
 
 <script type="text/javascript">
-	document.getElementById('btn-subscribe').addEventListener('click', function() {
+	document.getElementById('three').addEventListener('click', function() {
 		var buttonModal = new Custombox.modal({
 			content: {
 			effect: 'slide',
@@ -487,22 +531,5 @@
 	});
 </script>
 
-<script type="text/javascript"
-src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
-class="statcounter"><a title="godaddy web stats"
-href="http://www.statcounter.com/godaddy_website_tonight/"
-target="_blank"><img class="statcounter"
-src="http://c.statcounter.com/6148570/0/0da2004d/1/"
-alt="godaddy web stats" ></a></div></noscript>
-<!-- End of StatCounter Code -->
-		
-		
-		<a href="http://longs.staradvertiser.com" target="_blank"><img alt="longs now CVS" src="images/longs_now_cvs.jpg"/></a><br>
-		<p>Problems viewing this page? Email us at <a style="color: white;" href="mailto:webmasters@staradvertiser.com">webmasters@staradvertiser.com</a></p>	
 
-	</footer>
-
-	</div>	
-
-</body>
 </html>

@@ -6,7 +6,7 @@
 	// date_default_timezone_set('Pacific/Honolulu');
 
 	require_once("resources/Email_Service.php");
- 	$email_service = new Email_Service( "-", false, true ); 
+ 	$email_service = new Email_Service( "8973c0961bcc48daa470281282ebc545", false, true ); 
  	$mailing_lists_location = array(
 									134004 => "oahu",
 									134006 => "maui",
@@ -15,8 +15,8 @@
 									135972 => "hilo"
 							  );
 
-	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=-";
-	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=-";
+	$subscribe_url = "https://api.iterable.com/api/lists/subscribe?api_key=8973c0961bcc48daa470281282ebc545";
+	$unsubscribe_url = "https://api.iterable.com/api/lists/unsubscribe?api_key=8973c0961bcc48daa470281282ebc545";
 
 	function test_input($data) {
 		$data = trim($data);
@@ -52,7 +52,7 @@
 
 
 
-if ($_SERVER['REMOTE_ADDR']=="-") {
+if ($_SERVER['REMOTE_ADDR']=="66.162.249.170") {
 
 
 	$email = $_GET["email"];
@@ -97,6 +97,10 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 	$subscribe_result =	subscribe_to_list( (int)$location_id, $subscriber, $subscribe_url);
 
 
+}
+
+if ($_SERVER['HTTP_REFERER']=="http://longs.staradvertiser.com/newsletter.php"){
+	$subscribe_result && $result_code == 200;
 }
 
 
@@ -179,19 +183,19 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 		</script>
 		
 		<div>
-			<a href="http://longs.staradvertiser.com"><img alt="hawaiijobs" src="images/longsheader.png"/></a>
+			<a href="http://longs.staradvertiser.com"><img alt="longs" src="images/longsheader.png"/></a>
 		</div>
 				
 	
 
 		<div>
 			<?php
-		if ( $subscribe_result && $result_code == 200) { ?>
-			<h1>THANK YOU FOR SIGNING UP! </h1> <br>
-			Redirect page in <span id="countdown">4</span>
-		<?php } else {
-		include 'newsletter.php';
-		} ?>
+				if ( $subscribe_result && $result_code == 200) { ?>
+			<h1 style="font-family: 'Lato', sans-serif;"><strong>THANK YOU<br>FOR SIGNING UP!</strong></h1> <br>
+					Redirecting page in <span id="countdown">4</span>
+				<?php } else {
+				include 'newsletter.php';
+			} ?>
 		</div>   
 	    
 	</div>
@@ -220,7 +224,7 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 	</footer>
 <script type="text/javascript">
 
-	    var seconds = 4;
+/*	    var seconds = 4;
 	    
 	    function countdown() {
 	        seconds = seconds - 1;
@@ -236,7 +240,7 @@ if ($_SERVER['REMOTE_ADDR']=="-") {
 	    }
 
 	    countdown();
-
+*/
 </script>
 </body>
 </html>

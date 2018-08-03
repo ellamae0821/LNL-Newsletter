@@ -8,6 +8,8 @@
   text-align: center;
   position: relative;
   display: flex;
+  margin-right: 15px;
+  /*margin-bottom: 20px;*/
 }
 
 
@@ -17,9 +19,7 @@
   margin: 17% auto;
   background: #ffe600;
 }
-@media (max-width: 480px){
-	#signup{width: 100%;}
-}
+
 
 
 .nl_header {
@@ -40,7 +40,7 @@
 .input {
   display: flex;
   align-items: center;
-margin: 0 10px;
+  margin: 0 10px;
 }
 
 
@@ -110,13 +110,94 @@ input:focus {
 }
 
 #btn-subscribe{
-    display: block;
-    position: fixed;
-    z-index: 9999;
+
     cursor: pointer;
-    right: 0;
-    bottom: 0;
-    background-color: #4791d6;
+    background-color: #6ba4de;
     color: #ffffff;
-    padding: 10px 40px;
+    font-size: 15px;
+    font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
+    height:50px;
+    overflow-wrap: break-word;
+    display: flex;
+    height: 80%;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid white;
+    border-radius: 5px;
+    margin: 0px 5px 5px 25px;
+/*    padding: 10px 40px;*/
+}
+
+
+@media (max-width: 480px){
+	#signup{width: 100%;}
+	
+	.nl_header{font-size: 25px;}
+}
+
+
+/*  SECTIONS  */
+.section {
+  clear: both;
+  padding: 0px;
+  margin: 0px;
+  background-color: #e52e40;
+
+}
+
+/*  COLUMN SETUP  */
+.col {
+  display: block;
+  float:left;
+  margin: 1% 0 1% 1.6%;
+  height: 70px;
+}
+.col:first-child { 
+  /*margin: 10px 10px 0 10px; */
+}
+
+
+/*  GROUPING  */
+.group:before,
+.group:after { content:""; display:table; }
+.group:after { clear:both;}
+.group { zoom:1; /* For IE 6/7 */ }
+
+/*  GRID OF THREE  */
+.span_3_of_3 { 
+  width: 100%; 
+}
+.span_2_of_3 { 
+  width: 66.13%; 
+
+}
+.span_1_of_3 { 
+  width: 31.00%; 
+
+}
+
+#one{
+  background-image: url("images/longs_now_cvs.jpg");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#two{
+  text-align: center;
+  color: white;
+}
+
+#three{
+   text-align: center;
+/*  background-color: #4;791d6
+  cursor: pointer;
+  color: white;
+  border-color: white;*/
+}
+
+/*  GO FULL WIDTH BELOW 480 PIXELS */
+@media only screen and (max-width: 480px) {
+  .col {  margin: 1% 0 3% 0%; }
+  .span_3_of_3, .span_2_of_3, .span_1_of_3 { width: 100%; }
+  #btn-subscribe{ margin: 0px 15px 15px 15px;}
 }
